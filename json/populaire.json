@@ -1,0 +1,41 @@
+{"root":{
+    "shows":{
+        "0":{
+            "title":"How I Met Your Mother",
+            "url":"himym",
+            "banner":"https:\/\/www.betaseries.com\/images\/fonds\/himym.jpg",
+            "season":"8",
+            "episodes":"172",
+            "suivie":"54260",
+            "note":{"members":1859,"mean":4.53,"self":null}
+        },
+        "1":{
+            "title":"Dexter",
+            "url":"dexter",
+            "banner":"https:\/\/www.betaseries.com\/images\/fonds\/dexter.jpg",
+            "season":"7",
+            "episodes":"84",
+            "suivie":"53223",
+            "note":{"members":1929,"mean":4.7,"self":null}
+        },
+        "2":{
+            "title":"Desperate Housewives",
+            "url":"desperatehousewives",
+            "banner":"https:\/\/www.betaseries.com\/images\/fonds\/desperatehousewives.jpg",
+            "season":"8",
+            "episodes":"180",
+            "suivie":"46082",
+            "note":{"members":1019,"mean":4.3,"self":null}
+        },
+        "3":{
+            "title":"The Big Bang Theory",
+            "url":"bigbangtheory",
+            "banner":"https:\/\/www.betaseries.com\/images\/fonds\/bigbangtheory.jpg",
+            "season":"6",
+            "episodes":"123",
+            "suivie":"45100",
+            "note":{"members":1929,"mean":4.62,"self":null}
+        },
+        "code":1,"errors":{}
+    }
+}}
