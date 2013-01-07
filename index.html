@@ -11,7 +11,19 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-		
+		<link rel="stylesheet" href="css/fontello.css">
+		<link rel="stylesheet" href="css/animation.css"><!--[if IE 7]>
+		<link rel="stylesheet" href="css/fontello-ie7.css"><![endif]-->
+		<script>
+		  function toggleCodes(on) {
+			var obj = document.getElementById('icons');
+			if (on) {
+			  obj.className += ' codesOn';
+			} else {
+			  obj.className = obj.className.replace(' codesOn', '');
+			}
+		  }
+		</script>
         <link rel="stylesheet" href="css/reset.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
@@ -22,7 +34,23 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        
+        <header>
+			<h1>SeriesTracker</h1>
+		</header>
+		<nav>
+			<a href="#" class="accueil icon-home"></a><a href="#" class="favoris icon-star"></a><a href="#" class="calendrier icon-calendar"></a><a href="#" class="search icon-search"></a>
+		</nav>
+		<div id="search">
+			<form>
+				<input type="texte" name="recherche" id="recherche"/>
+				<button class="icon-search" type="submit"></button>
+			</form>
+		</div>
+		<div id="resultats">
+			<div class="resultat">
+				<p class="titre"></p>
+			</div>
+		</div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
