@@ -20,6 +20,24 @@
 				$barre_recherche.css('display','block');
 			}
 		}
+		var lister = function(){
+			$.ajax({
+				url: "http://api.betaseries.com/shows/display/all.json?key=af181b000037",
+				dataType: "jsonp",
+				success: function(data){
+				console.log(data.root.shows.length);
+					for( var i=0; i<10; i++){
+						var $currentElement = $listElement.clone(true);
+						$currentElement.attr('id',data.root.shows[i].url);
+						$currentElement.find('p').html(data.root.shows[i].title);
+						
+						$currentElement.appendTo($resultats);
+					//$resultats.child[i].find('.titre').html(data.root.shows[i].title);
+					
+					}
+				}
+			})
+		}//lister
 		
 	$( function () {
 
@@ -33,6 +51,7 @@
 		
 		$onget_recherche.on('click',showSearch);
 		
+		lister();
 	} );
 
 }( jQuery ) );
