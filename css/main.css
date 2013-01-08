@@ -3,7 +3,7 @@ html{
 }
 body{
     margin:0 auto;
-    background:url('../img/fond_mobile.jpg') top no-repeat;
+    background:url('../img/fond_mobile.jpg') top repeat-y;
     width:480px;
 }
 header{
@@ -23,7 +23,7 @@ nav{
     padding:5px;
     text-align:center;
 }
-nav a{
+nav a, nav p{
     display:inline-block;
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
@@ -36,8 +36,9 @@ nav a{
     font-size:2em;
     text-decoration:none;
     text-shadow:1px 1px 0 #AAA,-1px -1px 0 #000;
+    cursor:pointer;
 }
-nav a:hover, nav a:active{
+nav a:hover, nav a:active, nav p:hover, nav p:active{
     background: linear-gradient(#2b2b2b, #000000) repeat scroll 0 0 #000000;
     color:#0094FF;
     text-shadow:-1px -1px 0 #000;
@@ -49,7 +50,7 @@ nav a:hover, nav a:active{
     text-align:center;
 }
 #search form{
-    padding-right:51px;
+    padding-right:41px;
     position:relative;
 }
 #search input{
@@ -64,14 +65,15 @@ nav a:hover, nav a:active{
     position:absolute;
     right:0;
     top:0px;
-    height:29px;
+    -height:23px;
+    width: 40px;
     -moz-border-radius:0 5px 5px 0;
     -webkit-border-radius:0 5px 5px 0;
     border-radius:0 5px 5px 0;
     background:linear-gradient(#2b2b2b, #000000) repeat scroll 0 0 #000000;
     border:1px solid #111;
     color:#AAA;
-    padding-bottom:4px;
+    -padding-bottom:4px;
     font-size:1.3em;
     cursor:pointer;
 }
@@ -85,22 +87,51 @@ nav a:hover, nav a:active{
 .populaire{
     position:relative;
 }
-.apopulaire img{
+.populaire img{
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
 }
-.apopulaire p{
+.populaire .info{
     -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.8), inset 0 2px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.4);
     -moz-box-shadow: inset 0 0 1px rgba(0,0,0,.8), inset 0 2px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.4);
     box-shadow: inset 0 0 1px rgba(0,0,0,.8), inset 0 2px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.4);
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
-    position: absolute;
-    top:0;
     height: 100%;
     width: 100%;
+    position: absolute;
+    top:0;
+}
+.populaire .info p{
+    position: absolute;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color:white;
+}
+.populaire .titre{
+    bottom:3px;
+    background: rgba(0,0,0,0.7);
+    padding: 7px 10px;
+    width: 100%;
+    font-size: 1.3em;
+}
+.populaire .saison{
+    bottom:13px;
+    right:10px;
+}
+.populaire .suivi{
+    top:10px;
+    left:10px;
+    text-shadow: 0 0 1px #000;
+}
+.populaire .note{
+    font-size: 1.3em;
+    top:10px;
+    right:10px;
+    text-shadow: 0 0 1px #000;
 }
 #resultats{
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);

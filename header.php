@@ -36,11 +36,11 @@
 			<h1>SeriesTracker</h1>
 		</header>
 		<nav>
-			<a href="#" class="accueil icon-home"></a><a href="#" class="favoris icon-star"></a><a href="#" class="calendrier icon-calendar"></a><a href="#" class="search icon-search"></a>
+			<a href="http://127.0.0.1/seriesTracker" class="accueil icon-home"></a><a href="#" class="favoris icon-star"></a><a href="#" class="calendrier icon-calendar"></a><p href="#" class="search icon-search"></p>
 		</nav>
 		<div id="search">
 			<form>
 				<input type="texte" name="recherche" id="recherche"/>
-				<button class="icon-search" type="submit"></button>
+				<button class="icon-search recherche" type="submit"></button>
 			</form>
 		</div>

@@ -6,12 +6,17 @@
 	"use strict";
 
 	// -- globals
-        var $onget_recherche,
+        var sKey = '&key=af181b000037',
+            sSiteUrl = 'http://127.0.0.1/seriesTracker',
+            $corps,
+            $onget_recherche,
             $barre_recherche,
             $populaires,
             $listPopular,
             $resultats,
-            $listElement;
+            $listSearch,
+            oData,
+            i;
 
 	// -- methods
                 var showSearch = function(){
@@ -20,6 +25,31 @@
                     }
                     else{
                         $barre_recherche.css('display','block');
+                    } 
+                }
+                
+                var initial = function(){
+                    var sUrl = window.location.search,
+                        aUrlSplit =[],
+                        aUrlParam =[];
+                    
+                    if(sUrl){
+                        sUrl = sUrl.replace('?','');
+                        aUrlSplit = sUrl.split("&");
+                        for(i=0;i<aUrlSplit.length;i++){
+                            aUrlParam.push(aUrlSplit[i].split("="));
+                        }
+                        for(i=0; i<aUrlParam.length; i++){
+                            if(aUrlParam[i][0]=='recherche'){
+                                rechercher(aUrlParam[i][1]);
+                            }
+                            else if(aUrlParam[i][0]=='serie'){
+                                ficher(aUrlParam[i][1]);
+                            }
+                        }
+                    }
+                    else{
+                        index();
                     }
                 }
                 var index =function(){
@@ -27,55 +57,76 @@
                         url: "http://127.0.0.1/seriesTracker/json/populaire.json",
                         dataType: "json",
                         success: function(data){
-                        console.log(data.root.shows[1].url);
-                        console.log('dd');
-                            for(var i=0; i<4; i++){
+                            oData=data.root.shows;
+                            for( var i=0; i<4; i++){
                                 var $currentElement = $listPopular.clone(true);
-                                $currentElement.attr('id',data.root.shows[i].url);
-                                $currentElement.find('img').attr('src',data.root.shows[i].banner).attr('alt','photo de la serie '+data.root.shows[i].title).attr('title','photo de la serie '+data.root.shows[i].title);
-                                $currentElement.find('.titre').html(data.root.shows[i].title);
-                                $currentElement.find('.saison').html(data.root.shows[i].season+' saisons - '+data.root.shows[i].episodes+' épisodes');
-                                $currentElement.find('.suivi').html("suivie par "+data.root.shows[i].suivie+" membres");
-                                $currentElement.find('.note').html(data.root.shows[i].note.mean+"/5");
+                                $currentElement.attr('id',oData[i].url);
+                                $currentElement.find('a').attr('href',sSiteUrl+'/fiche.php?serie='+oData[i].url);
+                                $currentElement.find('img').attr('src',oData[i].banner).attr('alt','photo de la serie '+oData[i].title).attr('title','photo de la serie '+oData[i].title);
+                                $currentElement.find('.titre').html(oData[i].title);
+                                $currentElement.find('.saison').html(oData[i].season+' saisons - '+oData[i].episodes+' épisodes');
+                                $currentElement.find('.suivi').html("suivie par "+oData[i].suivie+" membres");
+                                $currentElement.find('.note').html(oData[i].note.mean+"/5");
                                 $currentElement.appendTo($populaires);
                             }
                         }
                     })                    
-                }
-                var lister = function(){
+                }//index
+                var rechercher = function(param){
+                    $corps.children().remove();
                     $.ajax({
-                        url: "http://api.betaseries.com/shows/display/all.json?key=af181b000037",
+                        url: "http://api.betaseries.com/shows/search.json?title="+param+sKey,
                         dataType: "jsonp",
                         success: function(data){
-                        console.log(data.root.shows.length);
-                            for( var i=0; i<10; i++){
-                                var $currentElement = $listElement.clone(true);
-                                $currentElement.attr('id',data.root.shows[i].url);
-                                $currentElement.find('p').html(data.root.shows[i].title);
-
-                                $currentElement.appendTo($resultats);
-                            //$resultats.child[i].find('.titre').html(data.root.shows[i].title);
-
+                            oData=data.root.shows;
+                            for( var i=0; i<oData.length; i++){
+                                var $currentElement = $listSearch.clone(true);
+                                $currentElement.attr('id',oData[i].url);
+                                $currentElement.find('p').html(oData[i].title);
+                                $currentElement.appendTo($corps);
                             }
                         }
                     })
-                }//lister
+                }//rechercher
+                var ficher = function(param){
+                    //$corps.children().remove();
+                    $.ajax({
+                        url: "http://api.betaseries.com/shows/display/"+param+".json?"+sKey,
+                        dataType: "jsonp",
+                        success: function(data){
+                            console.log(data);
+                            oData=data.root.show;
+                            for( var i=0; i<oData.length; i++){
+                                var $currentElement = $listSearch.clone(true);
+                                $currentElement.attr('id',oData[i].url);
+                                $currentElement.find('p').html(oData[i].title);
+                                $currentElement.appendTo($corps);
+                            }
+                        }
+                    })
+                }//ficher
 		
 	$( function () {
 
 		// -- onload routines
-		$onget_recherche = $('nav .search');
+                //declaration
+                $onget_recherche = $('nav .search');
 		$barre_recherche = $('#search');
+                $corps = $('#corps');
                 $populaires = $('#populaires');
-		$listPopular = $populaires.find('.populaire').first().remove();
 		$resultats = $('#resultats');
-		$listElement = $resultats.find('.resultat').first().remove();
+                
+                //recupération
+                $listPopular = $populaires.find('.populaire').first().remove();
+		$listSearch = $resultats.find('.resultat').first().remove();
 		
+                //affichage - suppression
 		$barre_recherche.css('display','none');
+		$resultats.remove();               
 		
-		$onget_recherche.on('click',showSearch);
-		
-		index();
+                //evenements
+                $onget_recherche.on('click',showSearch);
+		initial();
 	} );
 
 }( jQuery ) );
