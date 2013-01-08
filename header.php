@@ -40,7 +40,7 @@
 		</nav>
 		<div id="search">
 			<form>
-				<input type="texte" name="recherche" id="recherche"/>
-				<button class="icon-search recherche" type="submit"></button>
+				<input type="texte" name="recherche" id="chercher"/>
+				<button class="icon-search chercher" type="submit"></button>
 			</form>
 		</div>
