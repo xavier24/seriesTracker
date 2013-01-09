@@ -8,6 +8,9 @@
 	// -- globals
         var sKey = 'key=af181b000037',
             sSiteUrl = 'http://127.0.0.1/seriesTracker',
+            sSerie,
+            sSaison,
+            sEpisode,
             $corps,
             $onget_recherche,
             $barre_recherche,
@@ -16,7 +19,8 @@
             $recherches,
             $listSearch,
             oData,
-            i;
+            i,
+            $suivre;
 
 	// -- methods
                 var showSearch = function(){
@@ -27,12 +31,10 @@
                         $barre_recherche.css('display','block');
                     } 
                 }
-                
                 var initial = function(){
                     var sUrl = window.location.search,
                         aUrlSplit =[],
                         aUrlParam =[];
-                    
                     if(sUrl){
                         sUrl = sUrl.replace('?','');
                         aUrlSplit = sUrl.split("&");
@@ -40,34 +42,34 @@
                             aUrlParam.push(aUrlSplit[i].split("="));
                         }
                         for(i=0; i<aUrlParam.length; i++){
-                            if(aUrlParam[i][0]=='recherche'){
+                            if(aUrlParam[i][0]=='recherche'){// si recherche dans url
                                 rechercher(aUrlParam[i][1]);
                             }
-                            else if(aUrlParam[i][0]=='serie'){
+                            else if(aUrlParam[i][0]=='serie'){// si serie dans url
+                                sSerie = aUrlParam[i][1];
                                 for(var j=0; j<aUrlParam.length; j++){
-                                    if(aUrlParam[j][0]=='saison'){
-                                        var saison = aUrlParam[j][1];
+                                    if(aUrlParam[j][0]=='saison'){// si saison dans url
+                                        sSaison = aUrlParam[j][1];// recup la saison
                                         for(var k=0; k<aUrlParam.length; k++){
-                                            if(aUrlParam[k][0]=='episode'){
-                                                var episode = aUrlParam[k][1];
-                                                episode(saison,episode);
+                                            if(aUrlParam[k][0]=='episode'){// si episode dans url
+                                                sEpisode = aUrlParam[k][1];
+                                                voirEpisode(sSerie,sSaison,sEpisode);
+                                                return;
                                             }
                                         }
                                     }
-                                    else{
-                                        fiche(aUrlParam[i][1]);        
-                                    }
-                                }
+                                }        
+                                fiche(sSerie);        
                             }
                         }
                     }
                     else{
                         index();
                     }
-                }
+                }//showSearch
                 var index =function(){
                     $.ajax({
-                        url: "http://127.0.0.1/seriesTracker/json/populaire.json",
+                        url: sSiteUrl+"/json/populaire.json",
                         dataType: "json",
                         success: function(data){
                             oData=data.root.shows;
@@ -83,13 +85,16 @@
                                 $currentElement.appendTo($resultats);
                             }
                         }
-                    })                    
+                    })
+                    //window.localStorage.removeItem('suivi');
+                    console.log(window.localStorage.getItem('suivi'));
                 }//index
                 var rechercher = function(param){
                     $corps.children().remove();
                     $.ajax({
                         url: "http://api.betaseries.com/shows/search.json?title="+param+"&"+sKey,
                         dataType: "jsonp",
+                        type:"POST",
                         success: function(data){
                             oData=data.root.shows;
                             for( var i=0; i<oData.length; i++){
@@ -103,14 +108,22 @@
                     })
                 }//rechercher
                 var fiche = function(param){
-                    var $currentElement = $listResult.clone(true);
+                    var $currentElement = $listResult.clone(true),
+                        suivi = [];
+                    if(window.localStorage.getItem("suivi")){
+                        suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                        for(var i=0;i<suivi.length;i++){
+                            if(suivi[i]==sSerie){
+                                $suivre.attr("checked","checked");
+                            }
+                        }
+                    }
                     $.ajax({
                         url: "http://api.betaseries.com/shows/display/"+param+".json?"+sKey,
                         dataType: "jsonp",
+                        type:"POST",
                         success: function(data){
-                            console.log(data);
                             oData=data.root.show;
-                                
                             $currentElement.attr('id',oData.url);
                             $currentElement.find('img').attr('src',oData.banner).attr('alt','photo de la serie '+oData.title).attr('title','photo de la serie '+oData.title);
                             $currentElement.find('.titre').html(oData.title);
@@ -122,8 +135,8 @@
                     $.ajax({
                         url: "http://api.betaseries.com/shows/episodes/"+param+".json?"+sKey,
                         dataType: "jsonp",
+                        type:"POST",
                         success: function(data){
-                            console.log(data);
                             oData=data.root.seasons;
                             var ul = $currentElement.find('.saisons');
                             for( var i in oData){
@@ -134,10 +147,8 @@
                                 }
                             }
                             $currentElement.appendTo($resultats);
-                            
                             $('.saison').on('click','p',showEpisode);
                         }
-                        
                     })
                 }//ficher
 		var showEpisode = function(){
@@ -149,6 +160,65 @@
                         $(this).next().slideDown('normal');   
                     }
                 }//showEpisode
+                var voirEpisode = function(serie,saison,episode){
+                    var suivi = [];
+                    if(window.localStorage.getItem("suivi")){
+                        suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                        for(var i=0;i<suivi.length;i++){
+                            if(suivi[i]==sSerie){
+                                $suivre.attr("checked","checked");
+                            }
+                        }
+                    }
+                    $.ajax({
+                        url: "http://api.betaseries.com/shows/episodes/"+serie+".json?season="+saison+"&"+sKey,
+                        dataType: "jsonp",
+                        type:"POST",
+                        success: function(data){
+                            oData=data.root.seasons;
+                            var $currentElement = $listResult.clone(true);
+                            $currentElement.attr('id',serie);
+                            $currentElement.find('img').attr('src',oData[0].episodes[(episode)-1].screen).attr('alt','photo de la serie '+serie).attr('title','photo de la serie '+serie);
+                            $currentElement.find('.titre').html(oData[0].episodes[(episode)-1].number+" - "+oData[0].episodes[(episode)-1].title);
+                            $currentElement.find('.description').html(oData[0].episodes[(episode)-1].description);
+                            var date = new Date((oData[0].episodes[(episode)-1].date)*1000);
+                            $currentElement.find('.genre').html(date.toLocaleDateString());
+                            $currentElement.find('.note').html(oData[0].episodes[(episode)-1].note.mean+"/5");
+                            $currentElement.appendTo($resultats);
+                        }
+                    })
+                }
+                var suivre = function(){
+                    var info = [],
+                        suivi =[],
+                        suiviCopie = [];
+                    info.push(sSerie);
+                    if($suivre.is(':checked')){
+                        if(window.localStorage.getItem("suivi")){
+                            suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                            for(var i=0;i<suivi.length;i++){
+                                if(suivi[i]==sSerie){
+                                    suiviCopie.push(suivi[i]);
+                                    return; 
+                                }
+                            }
+                        }
+                        suivi.push(info);
+                        window.localStorage.setItem('suivi',JSON.stringify(suivi));
+                    }
+                    else{
+                        if(window.localStorage.getItem("suivi")){
+                            suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                            for(var j=0;j<suivi.length;j++){
+                                if(suivi[j]!=sSerie){
+                                    suiviCopie.push(suivi[j]);
+                                }
+                            }
+                            suivi = suiviCopie;
+                            window.localStorage.setItem('suivi',JSON.stringify(suivi));
+                        }
+                    }
+                }
 	$( function () {
 
 		// -- onload routines
@@ -158,7 +228,8 @@
                 $corps = $('#corps');
                 $resultats = $('#resultats');
 		$recherches = $('#recherches');
-                
+                $suivre = $('#suivre');
+                            
                 //recupération
                 $listResult = $resultats.find('.resultat').first().remove();
 		$listSearch = $recherches.find('.recherche').first().remove();
@@ -169,7 +240,7 @@
 		
                 //evenements
                 $onget_recherche.on('click',showSearch);
-                
+                $suivre.on('click',suivre);
 		initial();
 	} );
 

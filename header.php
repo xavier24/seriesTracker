@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>SeriesTracker</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -36,7 +36,7 @@
 			<h1>SeriesTracker</h1>
 		</header>
 		<nav>
-			<a href="http://127.0.0.1/seriesTracker" class="accueil icon-home"></a><a href="#" class="favoris icon-star"></a><a href="#" class="calendrier icon-calendar"></a><p href="#" class="search icon-search"></p>
+			<a href="http://127.0.0.1/seriesTracker" class="accueil icon-home"></a><a href="#" class="favoris icon-star"></a><a href="#" class="calendrier icon-calendar"></a><p class="search icon-search"></p>
 		</nav>
 		<div id="search">
 			<form>

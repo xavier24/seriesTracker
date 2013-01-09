@@ -1,7 +1,10 @@
 <?php include('header.php') ?>
 <div id="corps">
     <div id="resultats">
+        <label for="suivre">Suivre</label>
+            <input type="checkbox" id="suivre" name="suivre" />
         <div class="resultat fiche">
+            
             <div class="image">
                 <img class="banner" width="100%" />
                 <p class="titre"></p>
