@@ -36,7 +36,7 @@
 			<h1>SeriesTracker</h1>
 		</header>
 		<nav>
-			<a href="http://127.0.0.1/seriesTracker" class="accueil icon-home"></a><a href="#" class="favoris icon-star"></a><a href="#" class="calendrier icon-calendar"></a><p class="search icon-search"></p>
+			<a href="http://127.0.0.1/seriesTracker" class="accueil icon-home"></a><a href="http://127.0.0.1/seriesTracker/favoris.php" class="favoris icon-star"></a><a href="http://127.0.0.1/seriesTracker/agenda.php" class="calendrier icon-calendar"></a><p class="search icon-search"></p>
 		</nav>
 		<div id="search">
 			<form>

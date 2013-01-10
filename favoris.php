@@ -1,7 +1,7 @@
 <?php include('header.php') ?>
-<div id="corps" class="accueil">
+<div id="corps" class="favoris">
     <div id="resultats">
-        <div class="resultat populaire">
+        <div class="resultat">
             <img class="banner" width="100%" />
             <a href="">
                 <div class="info">

@@ -4,8 +4,7 @@
 
 ( function ( $ ) {
 	"use strict";
-
-	// -- globals
+        // -- globals
         var sKey = 'key=af181b000037',
             sSiteUrl = 'http://127.0.0.1/seriesTracker',
             sSerie,
@@ -16,9 +15,11 @@
             $barre_recherche,
             $resultats,
             $listResult,
+            $listAgenda,
             $recherches,
             $listSearch,
             oData,
+            title,
             i,
             $suivre;
 
@@ -59,12 +60,19 @@
                                         }
                                     }
                                 }        
-                                fiche(sSerie);        
                             }
                         }
                     }
-                    else{
-                        index();
+                    console.log('switch');
+                    switch($corps.attr('class')){
+                        case'accueil':index();
+                            break;
+                        case'fiche':fiche(sSerie);
+                            break;
+                        case'favoris':favoris();
+                            break;
+                        case'agenda':agenda();
+                            break;
                     }
                 }//showSearch
                 var index =function(){
@@ -87,7 +95,7 @@
                         }
                     })
                     //window.localStorage.removeItem('suivi');
-                    console.log(window.localStorage.getItem('suivi'));
+                    console.log(JSON.parse(window.localStorage.getItem('suivi')));
                 }//index
                 var rechercher = function(param){
                     $corps.children().remove();
@@ -113,7 +121,7 @@
                     if(window.localStorage.getItem("suivi")){
                         suivi = JSON.parse(window.localStorage.getItem("suivi"));
                         for(var i=0;i<suivi.length;i++){
-                            if(suivi[i]==sSerie){
+                            if(suivi[i][0]==sSerie){
                                 $suivre.attr("checked","checked");
                             }
                         }
@@ -124,6 +132,7 @@
                         type:"POST",
                         success: function(data){
                             oData=data.root.show;
+                            title=oData.title;
                             $currentElement.attr('id',oData.url);
                             $currentElement.find('img').attr('src',oData.banner).attr('alt','photo de la serie '+oData.title).attr('title','photo de la serie '+oData.title);
                             $currentElement.find('.titre').html(oData.title);
@@ -150,7 +159,7 @@
                             $('.saison').on('click','p',showEpisode);
                         }
                     })
-                }//ficher
+                }//fiche
 		var showEpisode = function(){
                     if($(this).next().is(':visible')){
                         $(this).next().slideUp('normal');
@@ -165,7 +174,8 @@
                     if(window.localStorage.getItem("suivi")){
                         suivi = JSON.parse(window.localStorage.getItem("suivi"));
                         for(var i=0;i<suivi.length;i++){
-                            if(suivi[i]==sSerie){
+                            console.log(suivi[i]);
+                            if(suivi[i][0]==sSerie){
                                 $suivre.attr("checked","checked");
                             }
                         }
@@ -175,7 +185,9 @@
                         dataType: "jsonp",
                         type:"POST",
                         success: function(data){
+                            
                             oData=data.root.seasons;
+                            title = oData[0].episodes[(episode)-1].show;
                             var $currentElement = $listResult.clone(true);
                             $currentElement.attr('id',serie);
                             $currentElement.find('img').attr('src',oData[0].episodes[(episode)-1].screen).attr('alt','photo de la serie '+serie).attr('title','photo de la serie '+serie);
@@ -192,12 +204,13 @@
                     var info = [],
                         suivi =[],
                         suiviCopie = [];
-                    info.push(sSerie);
+                        info.push(sSerie);
+                        info.push(title);
                     if($suivre.is(':checked')){
                         if(window.localStorage.getItem("suivi")){
                             suivi = JSON.parse(window.localStorage.getItem("suivi"));
                             for(var i=0;i<suivi.length;i++){
-                                if(suivi[i]==sSerie){
+                                if(suivi[i][0]==sSerie){
                                     suiviCopie.push(suivi[i]);
                                     return; 
                                 }
@@ -210,7 +223,7 @@
                         if(window.localStorage.getItem("suivi")){
                             suivi = JSON.parse(window.localStorage.getItem("suivi"));
                             for(var j=0;j<suivi.length;j++){
-                                if(suivi[j]!=sSerie){
+                                if(suivi[j][0]!=sSerie){
                                     suiviCopie.push(suivi[j]);
                                 }
                             }
@@ -218,6 +231,73 @@
                             window.localStorage.setItem('suivi',JSON.stringify(suivi));
                         }
                     }
+                }
+                var favoris = function(){
+                    var suivi = [];
+                    if(window.localStorage.getItem("suivi")){
+                        suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                        console.log(suivi);
+                        for( var i=0; i<suivi.length; i++){
+                            var $currentElement = $listSearch.clone(true);
+                            $currentElement.attr('id',suivi[i][0]);
+                            $currentElement.find('a').attr('href',sSiteUrl+'/fiche.php?serie='+suivi[i][0]);
+                            $currentElement.find('p').html(suivi[i][1]);
+                            $currentElement.appendTo($corps);
+                        }
+                    }
+                }
+                var agenda = function(){
+                    $.ajax({
+                        url: "http://api.betaseries.com/planning/general.json?"+sKey,
+                        dataType: "jsonp",
+                        type:"POST",
+                        success: function(data){
+                            oData=data.root.planning;
+                            var array =[];
+                            var ordre
+                            //creer array calendrier
+                            for( var i in oData){
+                                var info = [];
+                                var inter = [];
+                                if(ordre != oData[i].date){
+                                    ordre = oData[i].date;
+                                    info = oData[i];
+                                    inter[0] = info;
+                                    array['a_'+oData[i].date] = inter;
+                                }
+                                else{
+                                    info=oData[i];
+                                    array['a_'+oData[i].date].push(info);
+                                }
+                            }
+                            console.log(array);
+                            //console.log(array['a_1357326900'][0].number);
+                            for( var i in array){
+                                var $currentList = $listAgenda.clone(true);//li>ul
+                                
+                                
+                               //console.log($currentUl);
+                                var jour = new Date((array[i][0].date)*1000);
+                                //console.log(jour.toLocaleDateString());
+                                $currentList.html(jour.toLocaleDateString()).append('<ul>');
+                                var $currentUl = $currentList.find('ul');//ul
+                                for(var j in array[i]){
+                                    var $currentElement = $listResult.clone(true);
+                                    $currentElement.find('.agenda_titre').html(array[i][j].show);
+                                    //console.log(array[i][j].show);
+                                    
+                                    $currentElement.appendTo($currentUl);//ul +
+                                }
+                                
+                                //$currentElement.attr('id',oData[i].url);
+                                //$currentElement.find('.general').attr('href',sSiteUrl+'/fiche.php?serie='+oData[i].url);
+                                //$currentElement.find('p.serie').html(oData[i].show);
+                                //$currentElement.find('.titre').attr('href',sSiteUrl+'/fiche.php?serie='+oData[i].url+'&saison='+oData[i].season+'&episode='+oData[i].episode).html(oData[i].title);
+                                //$currentElement.find('.titre');
+                                $currentList.appendTo($resultats);
+                            }
+                        }
+                    })
                 }
 	$( function () {
 
@@ -230,10 +310,11 @@
 		$recherches = $('#recherches');
                 $suivre = $('#suivre');
                             
-                //recupération
+                //recupération gabari
                 $listResult = $resultats.find('.resultat').first().remove();
 		$listSearch = $recherches.find('.recherche').first().remove();
-		
+		$listAgenda = $resultats.find('.agenda_date').first().remove();
+                
                 //affichage - suppression
 		$barre_recherche.css('display','none');
 		$recherches.remove();               
