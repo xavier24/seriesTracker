@@ -254,12 +254,16 @@
                         success: function(data){
                             oData=data.root.planning;
                             var array =[];
-                            var ordre
+                            var ordre = 0;
                             //creer array calendrier
                             for( var i in oData){
                                 var info = [];
                                 var inter = [];
-                                if(ordre != oData[i].date){
+                                var dateCompar = new Date(ordre*1000);
+                                var date2Compar = new Date((oData[i].date)*1000);
+                                dateCompar = dateCompar.toLocaleDateString()
+                                date2Compar = date2Compar.toLocaleDateString()
+                                if(dateCompar != date2Compar){
                                     ordre = oData[i].date;
                                     info = oData[i];
                                     inter[0] = info;
@@ -267,10 +271,9 @@
                                 }
                                 else{
                                     info=oData[i];
-                                    array['a_'+oData[i].date].push(info);
+                                    array['a_'+ordre].push(info);
                                 }
                             }
-                            console.log(array);
                             //console.log(array['a_1357326900'][0].number);
                             for( var i in array){
                                 var $currentList = $listAgenda.clone(true);//li>ul
@@ -286,16 +289,8 @@
                                     $currentElement.find('.general').attr("href",sSiteUrl+'/fiche.php?serie='+array[i][j].url+'&saison='+array[i][j].season+'&episode='+array[i][j].episode);
                                     $currentElement.find('.agenda_titre').html(array[i][j].show);
                                     $currentElement.find('.agenda_title').html(array[i][j].number+' - '+array[i][j].title);
-                                    //console.log(array[i][j].show);
-                                    
                                     $currentElement.appendTo($currentUl);//ul +
                                 }
-                                
-                                //$currentElement.attr('id',oData[i].url);
-                                //$currentElement.find('.general').attr('href',sSiteUrl+'/fiche.php?serie='+oData[i].url);
-                                //$currentElement.find('p.serie').html(oData[i].show);
-                                //$currentElement.find('.titre').attr('href',sSiteUrl+'/fiche.php?serie='+oData[i].url+'&saison='+oData[i].season+'&episode='+oData[i].episode).html(oData[i].title);
-                                //$currentElement.find('.titre');
                                 $currentList.appendTo($resultats);
                             }
                             $(".agenda_episode").css('display','none');
