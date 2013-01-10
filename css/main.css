@@ -257,3 +257,37 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
 .episodes a:hover,.episodes a:active{
     background:rgba(0,148,255,0.4);
 }
+.agenda{
+    margin: 10px;
+}
+.agenda li{
+    list-style: none;
+}
+.agenda_date>p{
+   color: #0094FF;
+   background: url("../img/black_techno_1.png");
+   padding: 10px 5px;
+   font-weight: bold;
+   cursor: pointer;
+}
+.agenda .resultat a{
+    color: white;
+    text-decoration: none;
+}
+.agenda .resultat a:hover p,.agenda .resultat a:active p{
+    color: white;
+    background: rgba(0,148,255,0.7);
+}
+.agenda .resultat p{
+    padding-left: 10px;
+    background: rgba(0,0,0,0.5);
+}
+.agenda_titre{
+    font-size:1.2em;
+    padding-bottom: 5px;
+}
+.agenda_title{
+    padding-bottom: 10px;
+    border-bottom:1px solid white;
+    color:#DDD;
+}

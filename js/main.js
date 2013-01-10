@@ -279,11 +279,13 @@
                                //console.log($currentUl);
                                 var jour = new Date((array[i][0].date)*1000);
                                 //console.log(jour.toLocaleDateString());
-                                $currentList.html(jour.toLocaleDateString()).append('<ul>');
+                                $currentList.append('<p>'+jour.toLocaleDateString()+'<ul class="agenda_episode">');
                                 var $currentUl = $currentList.find('ul');//ul
                                 for(var j in array[i]){
                                     var $currentElement = $listResult.clone(true);
+                                    $currentElement.find('.general').attr("href",sSiteUrl+'/fiche.php?serie='+array[i][j].url+'&saison='+array[i][j].season+'&episode='+array[i][j].episode);
                                     $currentElement.find('.agenda_titre').html(array[i][j].show);
+                                    $currentElement.find('.agenda_title').html(array[i][j].number+' - '+array[i][j].title);
                                     //console.log(array[i][j].show);
                                     
                                     $currentElement.appendTo($currentUl);//ul +
@@ -296,9 +298,20 @@
                                 //$currentElement.find('.titre');
                                 $currentList.appendTo($resultats);
                             }
+                            $(".agenda_episode").css('display','none');
+                            $('.agenda_date').on('click','p',showAgenda);
                         }
                     })
-                }
+                }//agenda
+                var showAgenda = function(e){
+                    if($(this).next().is(':visible')){
+                        $(this).next().slideUp('normal'); 
+                    }
+                    else{
+                        $('.agenda_episode').slideUp('normal');
+                        $(this).next().slideDown('normal');   
+                    }
+                }//showAgenda
 	$( function () {
 
 		// -- onload routines
@@ -317,7 +330,7 @@
                 
                 //affichage - suppression
 		$barre_recherche.css('display','none');
-		$recherches.remove();               
+                $recherches.remove();               
 		
                 //evenements
                 $onget_recherche.on('click',showSearch);

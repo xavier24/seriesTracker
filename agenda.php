@@ -2,15 +2,12 @@
 <div id="corps" class="agenda">
     <ul id="resultats">
         <li class="agenda_date">
-            <ul>
-            </ul>
         </li>
-    
         <li class="resultat">
             <a class="general" href="">
                 <p class="agenda_titre"></p>
+                <p class="agenda_title"></p>
             </a>
-            <hr />
         </li>
     </ul>
     <div id="recherches">
