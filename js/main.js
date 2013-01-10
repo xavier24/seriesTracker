@@ -253,47 +253,63 @@
                         type:"POST",
                         success: function(data){
                             oData=data.root.planning;
-                            var array =[];
-                            var ordre = 0;
+                            var array =[],
+                                ordre = 0,
+                                suivi = [],
+                                currentDate,
+                                currentTime = new Date();
+                            currentTime = currentTime.getTime();
+                            currentDate = (currentTime-43200000)/1000;
+                            //currentData = currentDate/1000;
+                            //currentDate = currentDate.toLocaleDateString();
                             //creer array calendrier
                             for( var i in oData){
-                                var info = [];
-                                var inter = [];
-                                var dateCompar = new Date(ordre*1000);
-                                var date2Compar = new Date((oData[i].date)*1000);
-                                dateCompar = dateCompar.toLocaleDateString()
-                                date2Compar = date2Compar.toLocaleDateString()
-                                if(dateCompar != date2Compar){
-                                    ordre = oData[i].date;
-                                    info = oData[i];
-                                    inter[0] = info;
-                                    array['a_'+oData[i].date] = inter;
-                                }
-                                else{
-                                    info=oData[i];
-                                    array['a_'+ordre].push(info);
+                                var info = [],
+                                inter = [],
+                                dateCompar = new Date(ordre*1000),
+                                date2Compar = new Date((oData[i].date)*1000);
+                                
+                                dateCompar = dateCompar.toLocaleDateString();
+                                date2Compar = date2Compar.toLocaleDateString();
+                                if(currentDate<oData[i].date){
+                                    if(dateCompar != date2Compar){
+                                        ordre = oData[i].date;
+                                        info = oData[i];
+                                        inter[0] = info;
+                                        array['a_'+oData[i].date] = inter;
+                                    }
+                                    else{
+                                        info=oData[i];
+                                        array['a_'+ordre].push(info);
+                                    }
                                 }
                             }
-                            //console.log(array['a_1357326900'][0].number);
-                            for( var i in array){
-                                var $currentList = $listAgenda.clone(true);//li>ul
-                                
-                                
-                               //console.log($currentUl);
-                                var jour = new Date((array[i][0].date)*1000);
-                                //console.log(jour.toLocaleDateString());
-                                $currentList.append('<p>'+jour.toLocaleDateString()+'<ul class="agenda_episode">');
-                                var $currentUl = $currentList.find('ul');//ul
-                                for(var j in array[i]){
-                                    var $currentElement = $listResult.clone(true);
-                                    $currentElement.find('.general').attr("href",sSiteUrl+'/fiche.php?serie='+array[i][j].url+'&saison='+array[i][j].season+'&episode='+array[i][j].episode);
-                                    $currentElement.find('.agenda_titre').html(array[i][j].show);
-                                    $currentElement.find('.agenda_title').html(array[i][j].number+' - '+array[i][j].title);
-                                    $currentElement.appendTo($currentUl);//ul +
+                            if(window.localStorage.getItem("suivi")){
+                                suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                                //console.log(array['a_1357326900'][0].number);
+                                for( var i in array){
+                                    var $currentList = $listAgenda.clone(true),
+                                    jour = new Date((array[i][0].date)*1000);
+                                    $currentList.append('<p>'+jour.toLocaleDateString()+'<ul class="agenda_episode">');
+                                    var $currentUl = $currentList.find('ul');
+                                    for(var j in array[i]){
+                                        for(var k in suivi){
+                                            //console.log(array[i][j].url);
+                                            //console.log(suivi[k][0]);
+                                            if(array[i][j].url==suivi[k][0]){
+                                                var $currentElement = $listResult.clone(true);
+                                                $currentElement.find('.general').attr("href",sSiteUrl+'/fiche.php?serie='+array[i][j].url+'&saison='+array[i][j].season+'&episode='+array[i][j].episode);
+                                                $currentElement.find('.agenda_titre').html(array[i][j].show);
+                                                $currentElement.find('.agenda_title').html(array[i][j].number+' - '+array[i][j].title);
+                                                $currentElement.appendTo($currentUl);
+                                            }
+                                        }
+                                    }
+                                    $currentList.appendTo($resultats);
                                 }
-                                $currentList.appendTo($resultats);
                             }
-                            $(".agenda_episode").css('display','none');
+                            
+                            //$(".agenda_episode").css('display','none');
                             $('.agenda_date').on('click','p',showAgenda);
                         }
                     })
