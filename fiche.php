@@ -1,8 +1,10 @@
 <?php include('header.php') ?>
 <div id="corps" class="fiche">
     <div id="resultats">
-        <label for="suivre">Suivre</label>
-        <input type="checkbox" id="suivre" name="suivre" />
+        <form>
+            <label for="suivre"></label>
+            <input type="checkbox" id="suivre" name="suivre" />
+        </form>
         <div class="resultat">
             <div class="image">
                 <img class="banner" width="100%" />

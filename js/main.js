@@ -63,7 +63,7 @@
                             }
                         }
                     }
-                    console.log('switch');
+                    //console.log('switch');
                     switch($corps.attr('class')){
                         case'accueil':index();
                             break;
@@ -95,7 +95,7 @@
                         }
                     })
                     //window.localStorage.removeItem('suivi');
-                    console.log(JSON.parse(window.localStorage.getItem('suivi')));
+                    //console.log(JSON.parse(window.localStorage.getItem('suivi')));
                 }//index
                 var rechercher = function(param){
                     $corps.children().remove();
@@ -123,6 +123,7 @@
                         for(var i=0;i<suivi.length;i++){
                             if(suivi[i][0]==sSerie){
                                 $suivre.attr("checked","checked");
+                                $resultats.find('label').css('background-position','0 0');
                             }
                         }
                     }
@@ -134,11 +135,13 @@
                             oData=data.root.show;
                             title=oData.title;
                             $currentElement.attr('id',oData.url);
-                            $currentElement.find('img').attr('src',oData.banner).attr('alt','photo de la serie '+oData.title).attr('title','photo de la serie '+oData.title);
+                            $currentElement.find('img').attr('src',oData.banner).attr('title','photo de la serie '+oData.title);
                             $currentElement.find('.titre').html(oData.title);
                             $currentElement.find('.description').html(oData.description);
                             $currentElement.find('.genre').html(oData.genres[0]);
-                            $currentElement.find('.note').html(oData.note.mean+"/5");
+                            if(oData.note.mean){
+                                $currentElement.find('.note').html(oData.note.mean+"/5");
+                            }
                         }
                     })
                     $.ajax({
@@ -174,9 +177,10 @@
                     if(window.localStorage.getItem("suivi")){
                         suivi = JSON.parse(window.localStorage.getItem("suivi"));
                         for(var i=0;i<suivi.length;i++){
-                            console.log(suivi[i]);
+                            //console.log(suivi[i]);
                             if(suivi[i][0]==sSerie){
                                 $suivre.attr("checked","checked");
+                                $resultats.find('label').css('background-position','0 0');
                             }
                         }
                     }
@@ -185,17 +189,19 @@
                         dataType: "jsonp",
                         type:"POST",
                         success: function(data){
-                            
                             oData=data.root.seasons;
                             title = oData[0].episodes[(episode)-1].show;
                             var $currentElement = $listResult.clone(true);
                             $currentElement.attr('id',serie);
-                            $currentElement.find('img').attr('src',oData[0].episodes[(episode)-1].screen).attr('alt','photo de la serie '+serie).attr('title','photo de la serie '+serie);
+                            $currentElement.find('img').attr('src',oData[0].episodes[(episode)-1].screen).attr('title','photo de la serie '+serie);
                             $currentElement.find('.titre').html(oData[0].episodes[(episode)-1].number+" - "+oData[0].episodes[(episode)-1].title);
                             $currentElement.find('.description').html(oData[0].episodes[(episode)-1].description);
                             var date = new Date((oData[0].episodes[(episode)-1].date)*1000);
                             $currentElement.find('.genre').html(date.toLocaleDateString());
-                            $currentElement.find('.note').html(oData[0].episodes[(episode)-1].note.mean+"/5");
+                            if(oData[0].episodes[(episode)-1].note.mean){
+                               $currentElement.find('.note').html(oData[0].episodes[(episode)-1].note.mean+"/5"); 
+                            }
+                            
                             $currentElement.appendTo($resultats);
                         }
                     })
@@ -207,6 +213,7 @@
                         info.push(sSerie);
                         info.push(title);
                     if($suivre.is(':checked')){
+                        $resultats.find('label').animate({backgroundPositionX : 0},1000,function(){});
                         if(window.localStorage.getItem("suivi")){
                             suivi = JSON.parse(window.localStorage.getItem("suivi"));
                             for(var i=0;i<suivi.length;i++){
@@ -220,6 +227,7 @@
                         window.localStorage.setItem('suivi',JSON.stringify(suivi));
                     }
                     else{
+                        $resultats.find('label').animate({backgroundPositionX : -75},1000,function(){});
                         if(window.localStorage.getItem("suivi")){
                             suivi = JSON.parse(window.localStorage.getItem("suivi"));
                             for(var j=0;j<suivi.length;j++){
@@ -236,7 +244,7 @@
                     var suivi = [];
                     if(window.localStorage.getItem("suivi")){
                         suivi = JSON.parse(window.localStorage.getItem("suivi"));
-                        console.log(suivi);
+                        //console.log(suivi);
                         for( var i=0; i<suivi.length; i++){
                             var $currentElement = $listSearch.clone(true);
                             $currentElement.attr('id',suivi[i][0]);
@@ -260,8 +268,6 @@
                                 currentTime = new Date();
                             currentTime = currentTime.getTime();
                             currentDate = (currentTime-43200000)/1000;
-                            //currentData = currentDate/1000;
-                            //currentDate = currentDate.toLocaleDateString();
                             //creer array calendrier
                             for( var i in oData){
                                 var info = [],
@@ -348,6 +354,8 @@
                 $suivre.on('click',suivre);
 		initial();
 	} );
+        //pluging animation background
+        var $div=$('<div style="background-position: 3px 5px">');$.support.backgroundPosition=$div.css('backgroundPosition')==="3px 5px"?true:false;$.support.backgroundPositionXY=$div.css('backgroundPositionX')==="3px"?true:false;$div=null;var xy=["X","Y"];function parseBgPos(bgPos){var parts=bgPos.split(/\s/),values={"X":parts[0],"Y":parts[1]};return values}if(!$.support.backgroundPosition&&$.support.backgroundPositionXY){$.cssHooks.backgroundPosition={get:function(elem,computed,extra){return $.map(xy,function(l,i){return $.css(elem,"backgroundPosition"+l)}).join(" ")},set:function(elem,value){$.each(xy,function(i,l){var values=parseBgPos(value);elem.style["backgroundPosition"+l]=values[l]})}}}if($.support.backgroundPosition&&!$.support.backgroundPositionXY){$.each(xy,function(i,l){$.cssHooks["backgroundPosition"+l]={get:function(elem,computed,extra){var values=parseBgPos($.css(elem,"backgroundPosition"));return values[l]},set:function(elem,value){var values=parseBgPos($.css(elem,"backgroundPosition")),isX=l==="X";elem.style.backgroundPosition=(isX?value:values["X"])+" "+(isX?values["Y"]:value)}};$.fx.step["backgroundPosition"+l]=function(fx){$.cssHooks["backgroundPosition"+l].set(fx.elem,fx.now+fx.unit)}})}
 
 }( jQuery ) );
 

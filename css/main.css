@@ -200,8 +200,9 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
 }
 .fiche .image{
     position: relative;
+    min-height: 70px;
 }
-.fiche .titre{
+.fiche #resultats .titre{
     background: rgba(0,0,0,0.7);
     bottom:3px;
     padding: 7px 10px;
@@ -267,7 +268,7 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
    color: #0094FF;
    background: url("../img/black_techno_1.png");
    padding: 10px 5px;
-   font-weight: bold;
+   text-shadow: 1px 1px 0 #000044;
    cursor: pointer;
 }
 .agenda .resultat a{
@@ -281,6 +282,7 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
 .agenda .resultat p{
     padding-left: 10px;
     background: rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 0 #000;
 }
 .agenda_titre{
     font-size:1.2em;
@@ -290,4 +292,20 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     padding-bottom: 10px;
     border-bottom:1px solid white;
     color:#DDD;
+}
+#resultats form{
+    text-align: right;
+    padding: 10px 20px 0 0;
+}
+#resultats label{
+    height: 32px;
+    width: 110px;
+    background-image:url('../img/toggle.png');
+    background-position: -75px 0;
+    display:inline-block;
+    cursor: pointer;
+    -margin-right: 15px;
+}
+#resultats input{
+    display: none;
 }
