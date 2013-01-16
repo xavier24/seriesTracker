@@ -1,10 +1,13 @@
 html{
     font-family:"myriad-pro",sans-serif;
+    -background-color: #000;
+    min-height: 100%;
 }
 body{
     margin:0 auto;
-    background:url('../img/fond_mobile.jpg') top repeat-y;
-    width:480px;
+    max-width:767px;
+    min-width: 300px;
+    height: 100%;
 }
 header{
     background:#222;
@@ -112,11 +115,18 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     -webkit-box-shadow:0 0 5px #0094FF;
     box-shadow:0 0 5px #0094FF;
 }
-#resultats{
-    -margin: 10px;
-}
 .populaire{
     position:relative;
+}
+.populaireH1{
+    font-size: 2em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1em;
+    color: #fff9d6;
+    font-weight:bold;
+    text-align: center;
+    padding: 15px 5px;
+    text-shadow:0 0 0 #AAAAAA, 1px 1px 0 #999999, 2px 2px 0 #777777, 0 0 3px #000000,0 0 3px #0084FF,0 0 6px #0084FF,0 0 17px #0084FF;
 }
 .populaire img{
     -webkit-border-radius: 20px;
@@ -153,12 +163,9 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
 .populaire .titre{
     bottom:3px;
     background: rgba(0,0,0,0.7);
-    padding: 7px 10px;
     width: 100%;
-    font-size: 1.3em;
 }
 .populaire .saison{
-    bottom:13px;
     right:10px;
 }
 .populaire .suivi{
@@ -188,7 +195,7 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
 .recherche a{
     padding:10px;
     color:white;
-    height:20px;
+    min-height:20px;
     display: block;
     text-decoration:none;
 }
@@ -202,18 +209,15 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     position: relative;
     min-height: 70px;
 }
-.fiche #resultats .titre{
+.fiche .titre{
     background: rgba(0,0,0,0.7);
     bottom:3px;
-    padding: 7px 10px;
     width: 100%;
-    font-size: 1.3em;
     position:absolute;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     color:white;
-    font-size:1.8em;
     border-bottom:2px solid white;
 }
 .fiche .info{
@@ -222,7 +226,7 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     padding:10px;
 }
 .fiche .note{
-    bottom: 15px;
+    bottom: 12px;
     color: white;
     font-size: 1.4em;
     position: absolute;
@@ -259,7 +263,7 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     background:rgba(0,148,255,0.4);
 }
 .agenda{
-    margin: 10px;
+    padding: 10px;
 }
 .agenda li{
     list-style: none;
@@ -279,7 +283,7 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     color: white;
     background: rgba(0,148,255,0.7);
 }
-.agenda .resultat p{
+.agenda_titre, .agenda_title{
     padding-left: 10px;
     background: rgba(0,0,0,0.5);
     text-shadow: 1px 1px 0 #000;
@@ -293,11 +297,11 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     border-bottom:1px solid white;
     color:#DDD;
 }
-#resultats form{
+.fiche form{
     text-align: right;
     padding: 10px 20px 0 0;
 }
-#resultats label{
+.fiche label{
     height: 32px;
     width: 110px;
     background-image:url('../img/toggle.png');
@@ -306,6 +310,55 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
     cursor: pointer;
     -margin-right: 15px;
 }
-#resultats input{
-    display: none;
+.fiche input{
+    -display: none;
+}
+@media only screen and (min-width:480px){
+    html{
+        background:url('../img/fond_tablette.jpg') top repeat-y #000;
+    }
+}
+@media only screen and (min-width:401px){
+    .populaire .titre {
+        font-size: 1.3em;
+        padding: 7px 200px 7px 10px;
+    }
+    .populaire .saison{
+        bottom:13px;
+    }
+    .fiche .titre{
+        padding: 7px 80px 7px 10px;
+        font-size:1.8em;
+    }
+}
+@media only screen and (max-width:479px){
+    html{
+        background:url('../img/fond_mobile.jpg') top repeat-y #000;
+    }
+}
+@media only screen and (max-width:400px){
+    .populaireH1{
+        font-size: 1.8em;
+    }
+    .populaire .titre {
+        font-size: 1.1em;
+        padding: 7px 100px 3px 10px;
+        min-height: 40px;
+    }
+    .populaire .saison {
+        bottom: 8px;
+        font-size: 0.9em;
+        text-align: right;
+        width: 87px;
+    }
+    .populaire .suivi {
+        top: 2px;
+    }
+    .populaire .note {
+        top: 2px;
+    }
+    .fiche .titre{
+        padding: 7px 80px 7px 10px;
+        font-size:1.3em;
+    }
 }

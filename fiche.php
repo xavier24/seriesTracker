@@ -5,7 +5,7 @@
             <label for="suivre"></label>
             <input type="checkbox" id="suivre" name="suivre" />
         </form>
-        <div class="resultat">
+        <div class="resultat fiche">
             <div class="image">
                 <img class="banner" width="100%" />
                 <p class="titre"></p>

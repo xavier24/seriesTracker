@@ -39,7 +39,7 @@
 			<a href="http://127.0.0.1/seriesTracker" class="accueil icon-home"></a><a href="http://127.0.0.1/seriesTracker/favoris.php" class="favoris icon-star"></a><a href="http://127.0.0.1/seriesTracker/agenda.php" class="calendrier icon-calendar"></a><p class="search icon-search"></p>
 		</nav>
 		<div id="search">
-			<form>
+			<form method="get" action="#">
 				<input type="texte" name="recherche" id="chercher"/>
 				<button class="icon-search chercher" type="submit"></button>
 			</form>
