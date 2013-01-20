@@ -13,10 +13,10 @@ header{
     background:#222;
     height:40px;
     padding-top:5px;
-    color:#111;
+    color:#666;
     font-size:1.8em;
     text-align:center;
-    text-shadow: 1px 1px 0 #333, -1px -1px 0 #000;
+    text-shadow: 1px 1px 0 #AAA, -1px -1px 0 #000;
     border-bottom: 1px solid #111111;
 }
 nav{
@@ -204,6 +204,13 @@ nav a:hover, nav a:active, nav p:hover, nav p:active{
 }
 .recherche+.recherche{
     margin-top:1px;
+}
+.attente{
+    text-align: center;
+    color:black;
+    padding:10px 5px;
+    background: rgba(255,255,255,0.5);
+    margin-top:20px;
 }
 .fiche .image{
     position: relative;

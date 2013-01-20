@@ -11,6 +11,7 @@
             oData,
             sSerie,
             $corps,
+            $suivre,
             $onget_recherche,
             $barre_recherche,
             $resultats,
@@ -34,11 +35,13 @@
                         }
                     }
                     var requete = function(sUrlRequete,callback){
+                        $corps.append('<div class="attente"><p>Chargement en cours</p><img src="img/ajax-loader_requete.gif"/></div>');
                         $.ajax({
                             url: sUrlRequete,
                             dataType: "jsonp",
                             type:"POST",
                             success: function(data){
+                                $corps.find(".attente").remove();
                                 callback.apply( null, [ data ] );
                             }
                         })
@@ -101,9 +104,11 @@
                         requete(sUrlRequete,function(data){
                             oData=data.root.show;
                             title=oData.title;
-                            var src = oData.banner.replace('https://','http://');
+                            if(oData.banner){
+                                var src = oData.banner.replace('https://','http://');
+                                $currentElement.find('img').attr('src',src).attr('title','photo de la serie '+oData.title);
+                            }
                             $currentElement.attr('id',oData.url);
-                            $currentElement.find('img').attr('src',src).attr('title','photo de la serie '+oData.title);
                             $currentElement.find('.titre').html(oData.title);
                             $currentElement.find('.description').html(oData.description);
                             $currentElement.find('.genre').html(oData.genres[0]);
@@ -199,7 +204,7 @@
                             info.push(sSerie);
                             info.push(title);
                         if($(this).is(':checked')){
-                            $corps.find('.resultat label').animate({backgroundPositionX : 0},1000,function(){});
+                            $corps.find('.resultat label').animate({backgroundPositionX : 0},500,function(){});
                             if(window.localStorage.getItem("suivi")){
                                 suivi = JSON.parse(window.localStorage.getItem("suivi"));
                                 for(var i=0;i<suivi.length;i++){
@@ -213,7 +218,7 @@
                             window.localStorage.setItem('suivi',JSON.stringify(suivi));
                         }
                         else{
-                            $corps.find('.resultat label').animate({backgroundPositionX : -75},1000,function(){});
+                            $corps.find('.resultat label').animate({backgroundPositionX : -75},500,function(){});
                             if(window.localStorage.getItem("suivi")){
                                 suivi = JSON.parse(window.localStorage.getItem("suivi"));
                                 for(var j=0;j<suivi.length;j++){
@@ -230,13 +235,23 @@
                         var suivi = [];
                         if(window.localStorage.getItem("suivi")){
                             suivi = JSON.parse(window.localStorage.getItem("suivi"));
-                            for( var i=0; i<suivi.length; i++){
+                            console.log(suivi.length);
+                            console.log(suivi);
+                            if(suivi.length>0){
+                                for( var i=0; i<suivi.length; i++){
                                 var $currentElement = $listSearch.clone(true);
                                 $currentElement.attr('id',suivi[i][0]);
                                 $currentElement.find('a').attr('href',suivi[i][0]);
                                 $currentElement.find('p').html(suivi[i][1]);
                                 $currentElement.appendTo($corps);
+                                }
                             }
+                            else{
+                               $corps.append('<div class="attente"><p>Aucune série suivie</p></div>'); 
+                            }
+                        }
+                        else{
+                            
                         }
                     }
                     var agenda = function(){
@@ -274,14 +289,18 @@
                             }
                             if(window.localStorage.getItem("suivi")){
                                 suivi = JSON.parse(window.localStorage.getItem("suivi"));
+                                $corps.append('<div class="attente"><p>Il n\'y a aucune des séries suivies de diffusée les jours à venir</p></div>');
                                 for( var i in array){
                                     var $currentList = $listAgenda.clone(true),
                                     jour = new Date((array[i][0].date)*1000);
                                     $currentList.append('<p>'+jour.toLocaleDateString()+'<ul class="agenda_episode">');
+                                    $currentList.css('display','none');
                                     var $currentUl = $currentList.find('ul');
                                     for(var j in array[i]){
                                         for(var k in suivi){
                                             if(array[i][j].url==suivi[k][0]){
+                                                $('.attente').remove();
+                                                $currentList.css('display','block');
                                                 var $currentElement = $listResult.clone(true);
                                                 $currentElement.find('a').parent().attr("id",array[i][j].url);
                                                 $currentElement.find('a').attr("href",array[i][j].url+'.json?season='+array[i][j].season).addClass(array[i][j].episode);
